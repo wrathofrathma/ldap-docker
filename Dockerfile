@@ -38,5 +38,5 @@ VOLUME /data
 # Environmental Variables
 ENV LDAP_PASSWORD="password"
 ENV LDAP_ADMIN_PASSWORD="password"
-ENV LDAP_ORGANIZATION="Salisbury University"
-ENV LDAP_DOMAIN="salisbury.edu"
+ENV LDAP_ORGANIZATION="Example Organization"
+ENV LDAP_DOMAIN="example.org"
