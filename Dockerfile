@@ -23,8 +23,9 @@ COPY ./seed.txt /root/ldap/seed.txt
 # Install ldap server with our config
 RUN apt install -y slapd ldap-utils
 
-# Copy the startup script
+# Copy the startup script & health script
 COPY ./startup.sh /root/startup.sh
+COPY ./healthcheck.sh /root/healthcheck.sh
 
 CMD ["/usr/bin/bash", "/root/startup.sh"]
 
@@ -40,3 +41,6 @@ ENV LDAP_PASSWORD="password"
 ENV LDAP_ADMIN_PASSWORD="password"
 ENV LDAP_ORGANIZATION="Example Organization"
 ENV LDAP_DOMAIN="example.org"
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=5s \
+    CMD /root/healthcheck.sh

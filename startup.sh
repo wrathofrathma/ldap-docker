@@ -11,6 +11,8 @@ get_domain_components() {
   echo $LDAP_DOMAIN | sed "s/\./,dc=/g" | sed "s/^/dc=/g";
 }
 
+export LDAP_DOMAIN_COMPONENTS=$(get_domain_components)
+
 # Seeds the database
 seed() {
   # We need the service running if we're going to seed without slapadd
@@ -28,7 +30,7 @@ seed() {
 
   # Seeds the database with new entries
   for f in /seed/add/*; do
-    ldapadd -D cn=admin,$(get_domain_components) -f $f -H ldapi:/// -x -w $LDAP_PASSWORD
+    ldapadd -D cn=admin,$LDAP_DOMAIN_COMPONENTS -f $f -H ldapi:/// -x -w $LDAP_PASSWORD
   done
 
   # Kill it so we can run it properly later
