@@ -42,5 +42,5 @@ ENV LDAP_ADMIN_PASSWORD="password"
 ENV LDAP_ORGANIZATION="Example Organization"
 ENV LDAP_DOMAIN="example.org"
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=5s \
+HEALTHCHECK --interval=2s --timeout=2s --start-period=2s \
     CMD /root/healthcheck.sh
