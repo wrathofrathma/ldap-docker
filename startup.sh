@@ -37,22 +37,27 @@ seed() {
 
 # Initialization function
 initialize() {
+  echo "Initializing the container..."
   # Setup environmental variables
   # Copy the base configuration and db to the new mount point
+  echo "Moving databases to volume..."
   mkdir $DATA/ldap
   mv /etc/ldap $DATA/ldap/config
   mv /var/lib/ldap $DATA/ldap/db
 
   # Overwrite the default directories
+  echo "Symlinking the volume to the old database locations..."
   ln -sf $DATA/ldap/config /etc/ldap
   ln -sf $DATA/ldap/db /var/lib/ldap
 
   # Match permissions of the original directory
   chown -R openldap:openldap /var/lib/ldap
 
+  echo "Updating debconf selections for our headless install..."
   # Overwrite the default debconf settings for slapd
   envsubst < /root/ldap/seed.txt | debconf-set-selections
 
+  echo "Configuring slapd..."
   # Reconfigure slapd to properly init slapd with our domain and stuff.
   DEBIAN_FRONTEND=noninteractive dpkg-reconfigure slapd
 
@@ -69,8 +74,9 @@ if [[ ! -e $TOKEN ]]; then
   initialize
 fi
 
+echo "Starting slapd..."
 # Start the slapd service
-slapd -h ldapi:///,ldaps:///,ldap:///
+slapd -h "ldapi:/// ldaps:/// ldap:///"
 
 # Create a shell so we can connect and disconnect
 exec /bin/bash
